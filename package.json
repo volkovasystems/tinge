@@ -1,6 +1,6 @@
 {
   "name": "tinge",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Trace code generator.",
   "main": "tinge.js",
   "scripts": {

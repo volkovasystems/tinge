@@ -110,6 +110,7 @@ var tinge = function tinge( option ){
 		var hash = crypto.createHash( "sha512" );
 		hash.update( JSON.stringify( _.compact( factor ) ) );
 		hash = hash.digest( "hex" );
+		option.hash = hash;
 
 		var share = secret.share( hash, factor.length, 2 );
 		var sample = _.sampleSize( share, 2 );
