@@ -1,0 +1,32 @@
+{
+  "name": "tinge",
+  "version": "0.0.0",
+  "description": "Trace code generator.",
+  "main": "tinge.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/volkovasystems/tinge.git"
+  },
+  "keywords": [
+    "trace",
+    "code",
+    "generator",
+    "tinge"
+  ],
+  "author": "Richeve S. Bebedor <richeve.bebedor@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/volkovasystems/tinge/issues"
+  },
+  "homepage": "https://github.com/volkovasystems/tinge#readme",
+  "dependencies": {
+    "hashids": "^1.1.1",
+    "lodash": "^4.16.0",
+    "lz-string": "^1.4.4",
+    "secrets.js": "^0.1.8",
+    "u200b": "^0.1.3"
+  }
+}
