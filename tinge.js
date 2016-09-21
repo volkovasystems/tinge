@@ -97,6 +97,14 @@ var tinge = function tinge( option ){
 	var setting = option.setting;
 
 	if( code && setting ){
+		if( typeof code != "string" ){
+			throw new Error( "invalid code" );
+		}
+
+		if( typeof setting != "string" ){
+			throw new Error( "invalid setting" );
+		}
+
 		setting = lzString.decompress( setting );
 		setting = U200b( setting ).separate( );
 
@@ -133,12 +141,6 @@ var tinge = function tinge( option ){
 
 	}else{
 		var factor = option.factor;
-		var length = option.length || 12;
-
-		var salt = option.salt || tinge.SALT;
-		var dictionary = option.dictionary || tingle.DICTIONARY;
-
-		var indexed = option.indexed;
 
 		if( !factor ){
 			throw new Error( "factor not given" );
@@ -146,6 +148,26 @@ var tinge = function tinge( option ){
 
 		if( !doubt( factor ).ARRAY ){
 			throw new Error( "invalid factor" );
+		}
+
+		var length = option.length || 12;
+
+		var salt = option.salt || tinge.SALT;
+
+		if( typeof salt != "string" ){
+			throw new Error( "invalid salt" );
+		}
+
+		var dictionary = option.dictionary || tinge.DICTIONARY;
+
+		if( typeof dictionary != "string" ){
+			throw new Error( "invalid dictionary" );
+		}
+
+		var indexed = option.indexed;
+
+		if( indexed && length < 12 ){
+			throw new Error( "invalid length on indexed mode" );
 		}
 
 		var hash = crypto.createHash( "sha512" );
