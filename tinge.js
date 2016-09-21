@@ -127,11 +127,15 @@ var tinge = function tinge( option ){
 
 		if( copy == code ){
 			var generator = new hashid( salt, 0, dictionary );
-			var raw = generator.decodeHex( code );
+			var raw = generator.decodeHex( setting[ 0 ] );
 
 			var sample = U200b( raw ).separate( );
 
 			var hash = secret.combine( sample );
+
+			if( option.hash ){
+				throw new Error( "hash already exists" );
+			}
 
 			option.hash = hash;
 
@@ -173,12 +177,13 @@ var tinge = function tinge( option ){
 		var hash = crypto.createHash( "sha512" );
 		hash.update( JSON.stringify( _.compact( factor ) ) );
 		hash = hash.digest( "hex" );
-		option.hash = hash;
+		harden( "hash", hash, option );
 
 		var share = secret.share( hash, factor.length, 2 );
 		var sample = _.sampleSize( share, 2 );
 
-		var raw = U200b( sample[ 0 ].toString( ), sample[ 1 ].toString( ) ).toString( );
+		var raw = U200b( sample[ 0 ].toString( ), sample[ 1 ].toString( ) )
+			.base( U200B_BASE16 ).toString( );
 		var generator = new hashid( salt, 0, dictionary );
 		var code = generator.encodeHex( raw );
 

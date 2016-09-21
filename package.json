@@ -1,6 +1,6 @@
 {
   "name": "tinge",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Trace code generator.",
   "main": "tinge.js",
   "scripts": {
@@ -30,6 +30,6 @@
     "lz-string": "^1.4.4",
     "node-uuid": "^1.4.7",
     "secrets.js": "^0.1.8",
-    "u200b": "^0.1.3"
+    "u200b": "^0.2.1"
   }
 }
