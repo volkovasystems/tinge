@@ -1,6 +1,6 @@
 {
   "name": "tinge",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Trace code generator.",
   "main": "tinge.js",
   "scripts": {
@@ -23,9 +23,12 @@
   },
   "homepage": "https://github.com/volkovasystems/tinge#readme",
   "dependencies": {
+    "doubt": "0.0.4",
+    "harden": "^0.3.5",
     "hashids": "^1.1.1",
     "lodash": "^4.16.0",
     "lz-string": "^1.4.4",
+    "node-uuid": "^1.4.7",
     "secrets.js": "^0.1.8",
     "u200b": "^0.1.3"
   }

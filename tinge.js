@@ -42,27 +42,48 @@
 	@end-module-configuration
 
 	@module-documentation:
+		Support both encoding and decoding.
 	@end-module-documentation
 
 	@include:
 		{
 			"_": "lodash",
 			"crypto": "crypto",
+			"doubt": "doubt",
+			"harden": "harden",
 			"hashid": "hashids",
 			"lzString": "lz-string",
 			"secret": "secrets.js",
-			"U200b": "u200b"
+			"U200b": "u200b",
+			"uuid": "node-uuid"
 		}
 	@end-include
 */
 
 var _ = require( "lodash" );
 var crypto = require( "crypto" );
+var doubt = require( "doubt" );
+var harden = require( "harden" );
 var hashid = require( "hashids" );
 var lzString = require( "lz-string" );
 var secret = require( "secrets.js" );
 var U200b = require( "u200b" );
+var uuid = require( "node-uuid" );
 
+/*;
+	@option:
+		{
+			"code:required": "string",
+			"setting:required": "string"
+		},
+		{
+			"factor:required": "[string]",
+			"length": "number",
+			"salt": "string",
+			"dictionary": "string"
+		}
+	@end-option
+*/
 var tinge = function tinge( option ){
 	/*;
 		@meta-configuration:
@@ -85,6 +106,15 @@ var tinge = function tinge( option ){
 		var salt = setting[ 3 ];
 		var dictionary = setting[ 4 ];
 
+		if( !copy ||
+			isNaN( index ) ||
+			isNaN( last ) ||
+			!salt ||
+			!dictionary )
+		{
+			throw new Error( "invalid setting" );
+		}
+
 		copy = copy.substring( index, last );
 
 		if( copy == code ){
@@ -103,9 +133,20 @@ var tinge = function tinge( option ){
 
 	}else{
 		var factor = option.factor;
-		var length = option.length;
+		var length = option.length || 12;
+
+		var salt = option.salt || tinge.SALT;
+		var dictionary = option.dictionary || tingle.DICTIONARY;
+
 		var indexed = option.indexed;
-		var salt = option.salt;
+
+		if( !factor ){
+			throw new Error( "factor not given" );
+		}
+
+		if( !doubt( factor ).ARRAY ){
+			throw new Error( "invalid factor" );
+		}
 
 		var hash = crypto.createHash( "sha512" );
 		hash.update( JSON.stringify( _.compact( factor ) ) );
@@ -145,5 +186,13 @@ var tinge = function tinge( option ){
 
 	return option;
 };
+
+harden.bind( tinge )( "SALT", uuid.v4( ) );
+
+harden.bind( tinge )( "DICTIONARY", [
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+	"abcdefghijklmnopqrstuvwxyz",
+	"0123456789"
+].join( "" ) );
 
 module.exports = tinge;
