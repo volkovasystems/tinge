@@ -105,6 +105,9 @@ var tinge = function tinge( option ){
 			throw new Error( "invalid setting" );
 		}
 
+		var trace = U200b( code ).separate( );
+		code = trace[ 0 ] || code;
+
 		setting = lzString.decompress( setting );
 		setting = U200b( setting ).separate( );
 
@@ -137,7 +140,7 @@ var tinge = function tinge( option ){
 				throw new Error( "hash already exists" );
 			}
 
-			option.hash = hash;
+			harden( "hash", hash, option );
 
 		}else{
 			throw new Error( "invalid code" );
@@ -204,7 +207,7 @@ var tinge = function tinge( option ){
 			index = _.padStart( index, 3, 0 );
 			last = _.padStart( last, 3, 0 );
 
-			trace = [ trace, index, last ].join( "" );
+			trace = U200b( trace, index, last ).toString( );
 		}
 
 		option.code = trace;
