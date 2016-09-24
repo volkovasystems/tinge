@@ -105,6 +105,8 @@ var tinge = function tinge( option ){
 			throw new Error( "invalid setting" );
 		}
 
+		tinge.clear( code );
+
 		var trace = U200b( code ).separate( );
 		code = trace[ 0 ] || code;
 
@@ -210,12 +212,51 @@ var tinge = function tinge( option ){
 			trace = U200b( trace, index, last ).toString( );
 		}
 
+		if( trace in tinge.cache ){
+			return tinge( {
+				"factor": option.factor,
+				"length": option.length,
+				"dictionary": option.dictionary,
+				"salt": option.salt
+			} );
+		}
+
+		tinge.clear( trace );
+
 		option.code = trace;
 		option.setting = setting;
 	}
 
 	return option;
 };
+
+harden.bind( tinge )( "clear", function clear( trace ){
+	if( trace in tinge.cache ){
+		return tinge;
+	}
+
+	tinge.cache[ trace ] = true;
+
+	if( tinge.timeout.length >= 60 ){
+		return tinge;
+	}
+
+	tinge.timeout.push( setTimeout( function onTimeout( ){
+		for( var code in tinge.cache ){
+			delete tinge.cache[ code ];
+		}
+
+		while( tinge.timeout.length ){
+			clearTimeout( tinge.timeout.pop( ) );
+		}
+	} ), 1000 * ( tinge.timeout.length || 1 ) );
+
+	return tinge;
+} );
+
+harden.bind( tinge )( "timeout", [ ] );
+
+harden.bind( tinge )( "cache", { } );
 
 harden.bind( tinge )( "SALT", uuid.v4( ) );
 
