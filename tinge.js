@@ -54,6 +54,7 @@
 			"hashid": "hashids",
 			"lzString": "lz-string",
 			"secret": "secrets.js",
+			"snapd": "snapd",
 			"U200b": "u200b",
 			"uuid": "node-uuid"
 		}
@@ -67,6 +68,7 @@ var harden = require( "harden" );
 var hashid = require( "hashids" );
 var lzString = require( "lz-string" );
 var secret = require( "secrets.js" );
+var snapd = require( "snapd" );
 var U200b = require( "u200b" );
 var uuid = require( "node-uuid" );
 
@@ -241,7 +243,7 @@ harden.bind( tinge )( "clear", function clear( trace ){
 		return tinge;
 	}
 
-	tinge.timeout.push( setTimeout( function onTimeout( ){
+	tinge.timeout.push( snapd( function onClear( ){
 		for( var code in tinge.cache ){
 			delete tinge.cache[ code ];
 		}
@@ -249,7 +251,7 @@ harden.bind( tinge )( "clear", function clear( trace ){
 		while( tinge.timeout.length ){
 			clearTimeout( tinge.timeout.pop( ) );
 		}
-	} ), 1000 * ( tinge.timeout.length || 1 ) );
+	}, 1000 * 60 * ( tinge.timeout.length || 1 ) ).timeout );
 
 	return tinge;
 } );
