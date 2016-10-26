@@ -50,11 +50,14 @@
 			"_": "lodash",
 			"crypto": "crypto",
 			"doubt": "doubt",
+			"falze": "falze",
 			"harden": "harden",
 			"hashid": "hashids",
 			"lzString": "lz-string",
+			"numric": "numric",
 			"secret": "secrets.js",
 			"snapd": "snapd",
+			"truu": "truu",
 			"U200b": "u200b",
 			"uuid": "node-uuid"
 		}
@@ -64,11 +67,14 @@
 var _ = require( "lodash" );
 var crypto = require( "crypto" );
 var doubt = require( "doubt" );
+var falze = require( "falze" );
 var harden = require( "harden" );
 var hashid = require( "hashids" );
 var lzString = require( "lz-string" );
+var numric = require( "numric" );
 var secret = require( "secrets.js" );
 var snapd = require( "snapd" );
+var truu = require( "truu" );
 var U200b = require( "u200b" );
 var uuid = require( "node-uuid" );
 
@@ -95,10 +101,10 @@ var tinge = function tinge( option ){
 		@end-meta-configuration
 	*/
 
-	var code = option.code;
-	var setting = option.setting;
+	let code = option.code;
+	let setting = option.setting;
 
-	if( code && setting ){
+	if( truu( code ) && truu( setting ) ){
 		if( typeof code != "string" ){
 			throw new Error( "invalid code" );
 		}
@@ -109,36 +115,45 @@ var tinge = function tinge( option ){
 
 		tinge.clear( code );
 
-		var trace = U200b( code ).separate( );
+		let trace = U200b( code ).separate( );
 		code = trace[ 0 ] || code;
 
 		setting = lzString.decompress( setting );
 		setting = U200b( setting ).separate( );
 
-		var copy = setting[ 0 ];
-		var index = parseInt( setting[ 1 ] );
-		var last = parseInt( setting[ 2 ] );
-		var salt = setting[ 3 ];
-		var dictionary = setting[ 4 ];
+		let copy = setting[ 0 ];
+		let salt = setting[ 3 ];
+		let dictionary = setting[ 4 ];
 
-		if( !copy ||
-			isNaN( index ) ||
-			isNaN( last ) ||
-			!salt ||
-			!dictionary )
-		{
+		if( falze( copy ) || falze( salt ) || falze( dictionary ) ){
 			throw new Error( "invalid setting" );
+		}
+
+		let index = setting[ 1 ];
+		if( truu( index ) && numric( index ) ){
+			index = parseInt( index );
+
+		}else{
+			throw new Error( "invalid index" );
+		}
+
+		let last = setting[ 2 ];
+		if( truu( last ) && numric( last ) ){
+			last = parseInt( last );
+
+		}else{
+			throw new Error( "invalid last index" );
 		}
 
 		copy = copy.substring( index, last );
 
 		if( copy == code ){
-			var generator = new hashid( salt, 0, dictionary );
-			var raw = generator.decodeHex( setting[ 0 ] );
+			let generator = new hashid( salt, 0, dictionary );
+			let raw = generator.decodeHex( setting[ 0 ] );
 
-			var sample = U200b( raw ).separate( );
+			let sample = U200b( raw ).separate( );
 
-			var hash = secret.combine( sample );
+			let hash = secret.combine( sample );
 
 			if( option.hash ){
 				throw new Error( "hash already exists" );
@@ -151,9 +166,9 @@ var tinge = function tinge( option ){
 		}
 
 	}else{
-		var factor = option.factor;
+		let factor = option.factor;
 
-		if( !factor ){
+		if( falze( factor ) ){
 			throw new Error( "factor not given" );
 		}
 
@@ -161,51 +176,55 @@ var tinge = function tinge( option ){
 			throw new Error( "invalid factor" );
 		}
 
-		var length = option.length || 12;
+		let length = option.length || 12;
 
-		var salt = option.salt || tinge.SALT;
+		let salt = option.salt || tinge.SALT;
 
 		if( typeof salt != "string" ){
 			throw new Error( "invalid salt" );
 		}
 
-		var dictionary = option.dictionary || tinge.DICTIONARY;
+		let dictionary = option.dictionary || tinge.DICTIONARY;
 
 		if( typeof dictionary != "string" ){
 			throw new Error( "invalid dictionary" );
 		}
 
-		var indexed = option.indexed;
+		let indexed = option.indexed;
+
+		if( indexed && typeof indexed != "boolean" ){
+			throw new Error( "invalid indexed flag" );
+		}
 
 		if( indexed && length < 12 ){
 			throw new Error( "invalid length on indexed mode" );
 		}
 
-		var hash = crypto.createHash( "sha512" );
+		let hash = crypto.createHash( "sha512" );
 		hash.update( JSON.stringify( _.compact( factor ) ) );
 		hash = hash.digest( "hex" );
 		harden( "hash", hash, option );
 
-		var share = secret.share( hash, factor.length, 2 );
-		var sample = _.sampleSize( share, 2 );
+		let share = secret.share( hash, factor.length, 2 );
+		let sample = _.sampleSize( share, 2 );
 
-		var raw = U200b( sample[ 0 ].toString( ), sample[ 1 ].toString( ) )
+		let raw = U200b( sample[ 0 ].toString( ), sample[ 1 ].toString( ) )
 			.base( U200B_BASE16 ).toString( );
-		var generator = new hashid( salt, 0, dictionary );
-		var code = generator.encodeHex( raw );
+		let generator = new hashid( salt, 0, dictionary );
+		let code = generator.encodeHex( raw );
 
 		if( indexed ){
 			length = length - 6;
 		}
 
-		var index = Math.floor( ( code.length - length ) * Math.random( ) );
-		var last = index + length;
+		let index = Math.floor( ( code.length - length ) * Math.random( ) );
+		let last = index + length;
 
-		var setting = U200b( [ code, index, last, salt, dictionary ] ).toString( );
+		let setting = U200b( [ code, index, last, salt, dictionary ] ).toString( );
 
 		setting = lzString.compress( setting );
 
-		var trace = code.substring( index, last );
+		let trace = code.substring( index, last );
 
 		if( indexed ){
 			index = _.padStart( index, 3, 0 );
@@ -244,7 +263,7 @@ harden.bind( tinge )( "clear", function clear( trace ){
 	}
 
 	tinge.timeout.push( snapd( function onClear( ){
-		for( var code in tinge.cache ){
+		for( let code in tinge.cache ){
 			delete tinge.cache[ code ];
 		}
 
