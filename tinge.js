@@ -5,7 +5,7 @@
 		The MIT License (MIT)
 		@mit-license
 
-		Copyright (@c) 2016 Richeve Siodina Bebedor
+		Copyright (@c) 2017 Richeve Siodina Bebedor
 		@email: richeve.bebedor@gmail.com
 
 		Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -34,6 +34,9 @@
 			"file": "tinge.js",
 			"module": "tinge",
 			"author": "Richeve S. Bebedor",
+			"contributors": [
+				"John Lenon Maghanoy <johnlenonmaghanoy@gmail.com>"
+			],
 			"eMail": "richeve.bebedor@gmail.com",
 			"repository": "https://github.com/volkovasystems/tinge.git",
 			"test": "tinge-test.js",
@@ -64,19 +67,20 @@
 	@end-include
 */
 
-var _ = require( "lodash" );
-var crypto = require( "crypto" );
-var doubt = require( "doubt" );
-var falze = require( "falze" );
-var harden = require( "harden" );
-var hashid = require( "hashids" );
-var lzString = require( "lz-string" );
-var numric = require( "numric" );
-var secret = require( "secrets.js" );
-var snapd = require( "snapd" );
-var truu = require( "truu" );
-var U200b = require( "u200b" );
-var uuid = require( "node-uuid" );
+const _ = require( "lodash" );
+const crypto = require( "crypto" );
+const doubt = require( "doubt" );
+const falze = require( "falze" );
+const harden = require( "harden" );
+const hashid = require( "hashids" );
+const lzString = require( "lz-string" );
+const numric = require( "numric" );
+const protype = require( "protype" );
+const secret = require( "secrets.js" );
+const snapd = require( "snapd" );
+const truu = require( "truu" );
+const U200b = require( "u200b" );
+const uuid = require( "node-uuid" );
 
 /*;
 	@option:
@@ -92,7 +96,7 @@ var uuid = require( "node-uuid" );
 		}
 	@end-option
 */
-var tinge = function tinge( option ){
+const tinge = function tinge( option ){
 	/*;
 		@meta-configuration:
 			{
@@ -105,11 +109,11 @@ var tinge = function tinge( option ){
 	let setting = option.setting;
 
 	if( truu( code ) && truu( setting ) ){
-		if( typeof code != "string" ){
+		if( !protype( code, STRING ) ){
 			throw new Error( "invalid code" );
 		}
 
-		if( typeof setting != "string" ){
+		if( !protype( setting, STRING ) ){
 			throw new Error( "invalid setting" );
 		}
 
@@ -180,19 +184,19 @@ var tinge = function tinge( option ){
 
 		let salt = option.salt || tinge.SALT;
 
-		if( typeof salt != "string" ){
+		if( !protype( salt, STRING ) ){
 			throw new Error( "invalid salt" );
 		}
 
 		let dictionary = option.dictionary || tinge.DICTIONARY;
 
-		if( typeof dictionary != "string" ){
+		if( !protype( dictionary, STRING ) ){
 			throw new Error( "invalid dictionary" );
 		}
 
 		let indexed = option.indexed;
 
-		if( indexed && typeof indexed != "boolean" ){
+		if( indexed && !protype( indexed, BOOLEAN ) ){
 			throw new Error( "invalid indexed flag" );
 		}
 
