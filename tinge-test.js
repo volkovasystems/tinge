@@ -1,5 +1,3 @@
-"use strict";
-
 const tinge = require( "./tinge.js" );
 
 for( let index=0; index < 3; index++ ) {
